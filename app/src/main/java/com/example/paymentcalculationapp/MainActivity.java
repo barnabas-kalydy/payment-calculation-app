@@ -4,35 +4,51 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.paymentcalculationapp.exception.NoSuchPaymentTypeException;
+import com.example.paymentcalculationapp.payment_calculation.PaymentCalculator;
+import com.example.paymentcalculationapp.payment_calculation.PaymentType;
+
+import java.util.Map;
+
+import static com.example.paymentcalculationapp.payment_calculation.PaymentType.DAILY;
+import static com.example.paymentcalculationapp.payment_calculation.PaymentType.HOURLY;
+import static com.example.paymentcalculationapp.payment_calculation.PaymentType.MONTHLY;
+import static com.example.paymentcalculationapp.payment_calculation.PaymentType.YEARLY;
+
+/**
+ *
+ */
 public class MainActivity extends AppCompatActivity {
-    String selected;
-    Double hourly;
-    Double daily;
-    Double monthly;
-    Double yearly;
+    PaymentType paymentType;
+    Double paymentAmount;
 
     private EditText hourlyPayment;
     private EditText dailyPayment;
     private EditText monthlyPayment;
     private EditText yearlyPayment;
+    private Button calculateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 2 lines of setup that needed for the app
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // getting the views and the calculate button from activity_main.xml
         hourlyPayment = findViewById(R.id.hourlyPayment);
         dailyPayment = findViewById(R.id.dailyPayment);
         monthlyPayment = findViewById(R.id.monthlyPayment);
         yearlyPayment = findViewById(R.id.yearlyPayment);
+        calculateButton = findViewById(R.id.calculateButton);
 
         hourlyPayment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    selected = "h";
+                    paymentType = HOURLY;
                     hourlyPayment.setText("");
                 }
             }
@@ -42,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    selected = "d";
+                    paymentType = PaymentType.DAILY;
                     dailyPayment.setText("");
                 }
             }
@@ -52,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    selected = "m";
+                    paymentType = PaymentType.MONTHLY;
                     monthlyPayment.setText("");
                 }
             }
@@ -62,51 +78,52 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    selected = "y";
+                    paymentType = PaymentType.YEARLY;
                     yearlyPayment.setText("");
                 }
             }
         });
+
+        calculateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPaymentAmountFromUi(paymentType);
+                Map<PaymentType, Double> payments = null;
+                try {
+                    payments = PaymentCalculator.calculateOtherPayments(paymentType, paymentAmount);
+                } catch (NoSuchPaymentTypeException e) {
+                    e.printStackTrace();
+                }
+
+                hourlyPayment.setText(payments.get(HOURLY) + " Ft");
+                dailyPayment.setText(payments.get(DAILY) + " Ft");
+                monthlyPayment.setText(payments.get(MONTHLY) + " Ft");
+                yearlyPayment.setText(payments.get(YEARLY) + " Ft");
+
+                hourlyPayment.clearFocus();
+                dailyPayment.clearFocus();
+                monthlyPayment.clearFocus();
+                yearlyPayment.clearFocus();
+            }
+        });
     }
 
-    public void calculatePayment(View view) {
-        switch (selected) {
-            case "h":
-                hourly = Double.parseDouble(hourlyPayment.getText().toString());
-                daily = hourly * 8;
-                monthly = daily * 21;
-                yearly = monthly * 12;
+    private void getPaymentAmountFromUi(PaymentType paymentType) {
+        switch (paymentType) {
+            case HOURLY:
+                paymentAmount = Double.parseDouble(hourlyPayment.getText().toString());
                 break;
-            case "d":
-                daily = Double.parseDouble(dailyPayment.getText().toString());
-                hourly = daily / 8;
-                monthly = daily * 21;
-                yearly = monthly * 12;
+            case DAILY:
+                paymentAmount = Double.parseDouble(dailyPayment.getText().toString());
                 break;
-            case "m":
-                monthly = Double.parseDouble(monthlyPayment.getText().toString());
-                daily = monthly / 21;
-                hourly = daily / 8;
-                yearly = monthly * 12;
+            case MONTHLY:
+                paymentAmount = Double.parseDouble(monthlyPayment.getText().toString());
                 break;
-            case "y":
-                yearly = Double.parseDouble(yearlyPayment.getText().toString());
-                monthly = yearly / 12;
-                daily = monthly / 21;
-                hourly = daily / 8;
+            case YEARLY:
+                paymentAmount = Double.parseDouble(yearlyPayment.getText().toString());
                 break;
             default:
                 break;
         }
-
-        hourlyPayment.setText(hourly.toString() + " Ft");
-        dailyPayment.setText(daily.toString() + " Ft");
-        monthlyPayment.setText(monthly.toString() + " Ft");
-        yearlyPayment.setText(yearly.toString() + " Ft");
-
-        hourlyPayment.clearFocus();
-        dailyPayment.clearFocus();
-        monthlyPayment.clearFocus();
-        yearlyPayment.clearFocus();
     }
 }

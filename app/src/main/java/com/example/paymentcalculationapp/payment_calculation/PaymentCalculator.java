@@ -10,17 +10,25 @@ import static com.example.paymentcalculationapp.payment_calculation.PaymentType.
 import static com.example.paymentcalculationapp.payment_calculation.PaymentType.MONTHLY;
 import static com.example.paymentcalculationapp.payment_calculation.PaymentType.YEARLY;
 
+/**
+ * This is a singleton class that calculates any type(hourly, daily, monthly, yearly) and amount to every
+ * other type.
+ */
 public class PaymentCalculator {
 
     private static int WORKING_HOURS_PER_DAY = 8;
     private static int WORKING_DAYS_PER_MONTH = 21;
     private static int MONTHS_PER_YEAR = 12;
 
+    /**
+     * private constructor to don't let the class to be instantiated
+     */
     private PaymentCalculator() {
 
     }
 
-    public static Map<PaymentType, Double> calculateOtherPayments(PaymentType typeToCalculateFrom, Double amount) throws NoSuchPaymentTypeException {
+    public static Map<PaymentType, Double> calculateOtherPayments(PaymentType typeToCalculateFrom, Double amount)
+            throws NoSuchPaymentTypeException {
         Map<PaymentType, Double> calculatedPayments = new HashMap<>();
         calculatedPayments.put(typeToCalculateFrom, amount);
         switch (typeToCalculateFrom) {
@@ -40,7 +48,7 @@ public class PaymentCalculator {
                 calculatedPayments.put(YEARLY, calculatedPayments.get(MONTHLY) * MONTHS_PER_YEAR);
                 break;
             case YEARLY:
-                calculatedPayments.put(MONTHLY, calculatedPayments.get(YEARLY) * MONTHS_PER_YEAR);
+                calculatedPayments.put(MONTHLY, calculatedPayments.get(YEARLY) / MONTHS_PER_YEAR);
                 calculatedPayments.put(DAILY, calculatedPayments.get(MONTHLY) / WORKING_DAYS_PER_MONTH);
                 calculatedPayments.put(HOURLY, calculatedPayments.get(DAILY) / WORKING_HOURS_PER_DAY);
                 break;

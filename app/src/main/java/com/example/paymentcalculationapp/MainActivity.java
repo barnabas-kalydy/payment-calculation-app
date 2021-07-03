@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
                     getPaymentAmountFromUi(paymentType);
                     payments = PaymentCalculator.calculateOtherPayments(paymentType, paymentAmount);
 
-                    hourlyPayment.setText(payments.get(HOURLY).toString());
-                    dailyPayment.setText(payments.get(DAILY).toString());
-                    monthlyPayment.setText(payments.get(MONTHLY).toString());
-                    yearlyPayment.setText(payments.get(YEARLY).toString());
+                    hourlyPayment.setText(String.format("%.2f", payments.get(HOURLY)));
+                    dailyPayment.setText(String.format("%.2f", payments.get(DAILY)));
+                    monthlyPayment.setText(String.format("%.2f", payments.get(MONTHLY)));
+                    yearlyPayment.setText(String.format("%.2f", payments.get(YEARLY)));
 
                     hourlyPayment.clearFocus();
                     dailyPayment.clearFocus();

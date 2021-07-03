@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.paymentcalculationapp.exception.NoSuchPaymentTypeException;
 import com.example.paymentcalculationapp.payment_calculation.PaymentCalculator;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         monthlyPayment = findViewById(R.id.monthlyPayment);
         yearlyPayment = findViewById(R.id.yearlyPayment);
         calculateButton = findViewById(R.id.calculateButton);
+
+        // setting default value to payment type
+        paymentType = HOURLY;
 
         hourlyPayment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -87,23 +91,27 @@ public class MainActivity extends AppCompatActivity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPaymentAmountFromUi(paymentType);
-                Map<PaymentType, Double> payments = null;
+                Map<PaymentType, Double> payments;
                 try {
+                    getPaymentAmountFromUi(paymentType);
                     payments = PaymentCalculator.calculateOtherPayments(paymentType, paymentAmount);
+
+                    hourlyPayment.setText(payments.get(HOURLY).toString());
+                    dailyPayment.setText(payments.get(DAILY).toString());
+                    monthlyPayment.setText(payments.get(MONTHLY).toString());
+                    yearlyPayment.setText(payments.get(YEARLY).toString());
+
+                    hourlyPayment.clearFocus();
+                    dailyPayment.clearFocus();
+                    monthlyPayment.clearFocus();
+                    yearlyPayment.clearFocus();
+                } catch (NullPointerException e) {
+                    Toast.makeText(MainActivity.this, "No new number entered!", Toast.LENGTH_SHORT).show();
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "No number entered!", Toast.LENGTH_SHORT).show();
                 } catch (NoSuchPaymentTypeException e) {
                     e.printStackTrace();
                 }
-
-                hourlyPayment.setText(payments.get(HOURLY) + " Ft");
-                dailyPayment.setText(payments.get(DAILY) + " Ft");
-                monthlyPayment.setText(payments.get(MONTHLY) + " Ft");
-                yearlyPayment.setText(payments.get(YEARLY) + " Ft");
-
-                hourlyPayment.clearFocus();
-                dailyPayment.clearFocus();
-                monthlyPayment.clearFocus();
-                yearlyPayment.clearFocus();
             }
         });
     }

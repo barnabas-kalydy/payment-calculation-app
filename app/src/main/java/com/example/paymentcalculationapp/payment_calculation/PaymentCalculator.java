@@ -16,10 +16,6 @@ import static com.example.paymentcalculationapp.payment_calculation.PaymentType.
  */
 public class PaymentCalculator {
 
-    private static int WORKING_HOURS_PER_DAY = 8;
-    private static int WORKING_DAYS_PER_MONTH = 21;
-    private static int MONTHS_PER_YEAR = 12;
-
     /**
      * private constructor to don't let the class to be instantiated
      */
@@ -31,6 +27,9 @@ public class PaymentCalculator {
             throws NoSuchPaymentTypeException {
         Map<PaymentType, Double> calculatedPayments = new HashMap<>();
         calculatedPayments.put(typeToCalculateFrom, amount);
+        int WORKING_DAYS_PER_MONTH = 21;
+        int WORKING_HOURS_PER_DAY = 8;
+        int MONTHS_PER_YEAR = 12;
         switch (typeToCalculateFrom) {
             case HOURLY:
                 calculatedPayments.put(DAILY, calculatedPayments.get(HOURLY) * WORKING_HOURS_PER_DAY);

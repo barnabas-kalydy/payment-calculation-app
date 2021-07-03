@@ -4,8 +4,6 @@ import com.example.paymentcalculationapp.exception.NoSuchPaymentTypeException;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
-
 import java.util.Map;
 
 public class PaymentCalculatorTest extends TestCase {

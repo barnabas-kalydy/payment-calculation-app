@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">PaymentCalculationApp</string>
+    <string name="app_name">Payment Calculation App</string>
+    <string name="daily_payment">Daily Payment</string>
+    <string name="calculate">Calculate!</string>
+    <string name="yearly_payment">Yearly Payment</string>
+    <string name="monthly_payment">Monthly Payment</string>
+    <string name="hourly_payment">Hourly Payment</string>
 </resources>

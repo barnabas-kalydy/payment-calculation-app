@@ -19,9 +19,7 @@ public class PaymentCalculator {
     /**
      * private constructor to don't let the class to be instantiated
      */
-    private PaymentCalculator() {
-
-    }
+    private PaymentCalculator() {}
 
     public static Map<PaymentType, Double> calculateOtherPayments(PaymentType typeToCalculateFrom, Double amount)
             throws NoSuchPaymentTypeException {

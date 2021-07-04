@@ -4,15 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.paymentcalculationapp.MainActivity;
-import com.example.paymentcalculationapp.payment_calculation.PaymentType;
-
-import java.util.Map;
-
-import static com.example.paymentcalculationapp.payment_calculation.PaymentType.HOURLY;
 
 public class EventListenerSetter {
 
@@ -33,7 +24,7 @@ public class EventListenerSetter {
                 // if user enters zero to first number the program deletes it and notifies the user
                 if (s.toString().equals("0")) {
                     uiElement.setText("");
-                    Toast.makeText(context, "Please don't enter 0 as first number!", Toast.LENGTH_SHORT).show();
+                    ToastMessageMaker.toastMessage("Please don't enter 0 as first number!");
                 }
                 String withSeparators = uiElement.getText().toString();
                 String withoutSeparators = DecimalSeparatorMaker.removeDecimalSeparators(withSeparators);

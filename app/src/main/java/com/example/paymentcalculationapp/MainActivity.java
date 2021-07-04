@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 2 lines of setup that needed for the app
+        // 2 lines of setup that needed for the android app
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -245,8 +245,6 @@ public class MainActivity extends AppCompatActivity {
             stringNumberWithDecimalPoints.append(reversedString.charAt(i));
             if (counter % 3 == 0 && i != reversedString.length() - 1)
                 stringNumberWithDecimalPoints.append(",");
-            if (reversedString.charAt(i) == '.') {
-            }
             counter++;
         }
         return stringNumberWithDecimalPoints.reverse().toString();

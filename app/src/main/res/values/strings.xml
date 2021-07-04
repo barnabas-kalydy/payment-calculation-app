@@ -5,4 +5,5 @@
     <string name="yearly_payment">Yearly Payment</string>
     <string name="monthly_payment">Monthly Payment</string>
     <string name="hourly_payment">Hourly Payment</string>
+    <string name="no_number_entered_hint">Add a payment...</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.paymentcalculationapp;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,10 +55,65 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        hourlyPayment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // if user enters zero to first number the program deletes it and notifies the user
+                if (s.toString().equals("0")) {
+                    hourlyPayment.setText("");
+                    Toast.makeText(MainActivity.this, "Please don't enter 0 as first number!", Toast.LENGTH_SHORT).show();
+                }
+                String withSeparators = hourlyPayment.getText().toString();
+                String withoutSeparators = removeDecimalSeparators(withSeparators);
+                if (!placeDecimalSeparators(withoutSeparators).equals(withSeparators)) {
+                    hourlyPayment.setText(placeDecimalSeparators(withoutSeparators));
+                    hourlyPayment.setSelection(hourlyPayment.getText().length());
+                }
+            }
+        });
+
+
         dailyPayment.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 paymentType = PaymentType.DAILY;
                 dailyPayment.setText("");
+            }
+        });
+
+        dailyPayment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // if user enters zero to first number the program deletes it and notifies the user
+                if (s.toString().equals("0")) {
+                    dailyPayment.setText("");
+                    Toast.makeText(MainActivity.this, "Please don't enter 0 as first number!", Toast.LENGTH_SHORT).show();
+                }
+                String withSeparators = dailyPayment.getText().toString();
+                String withoutSeparators = removeDecimalSeparators(withSeparators);
+                if (!placeDecimalSeparators(withoutSeparators).equals(withSeparators)) {
+                    dailyPayment.setText(placeDecimalSeparators(withoutSeparators));
+                    dailyPayment.setSelection(dailyPayment.getText().length());
+                }
             }
         });
 
@@ -67,6 +124,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        monthlyPayment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // if user enters zero to first number the program deletes it and notifies the user
+                if (s.toString().equals("0")) {
+                    monthlyPayment.setText("");
+                    Toast.makeText(MainActivity.this, "Please don't enter 0 as first number!", Toast.LENGTH_SHORT).show();
+                }
+                String withSeparators = monthlyPayment.getText().toString();
+                String withoutSeparators = removeDecimalSeparators(withSeparators);
+                if (!placeDecimalSeparators(withoutSeparators).equals(withSeparators)) {
+                    monthlyPayment.setText(placeDecimalSeparators(withoutSeparators));
+                    monthlyPayment.setSelection(monthlyPayment.getText().length());
+                }
+            }
+        });
+
         yearlyPayment.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 paymentType = PaymentType.YEARLY;
@@ -74,10 +158,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        yearlyPayment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // if user enters zero to first number the program deletes it and notifies the user
+                if (s.toString().equals("0")) {
+                    yearlyPayment.setText("");
+                    Toast.makeText(MainActivity.this, "Please don't enter 0 as first number!", Toast.LENGTH_SHORT).show();
+                }
+                String withSeparators = yearlyPayment.getText().toString();
+                String withoutSeparators = removeDecimalSeparators(withSeparators);
+                if (!placeDecimalSeparators(withoutSeparators).equals(withSeparators)) {
+                    yearlyPayment.setText(placeDecimalSeparators(withoutSeparators));
+                    yearlyPayment.setSelection(yearlyPayment.getText().length());
+                }
+            }
+        });
+
         // setup calculate button behavior when clicked
         calculateButton.setOnClickListener(v -> {
             try {
-                getPaymentAmountFromUi(paymentType);
+                readUserInputByPaymentType(paymentType);
                 payments = PaymentCalculator.calculateOtherPayments(paymentType, paymentAmount);
                 printNewValuesToUserInterface();
             } catch (NullPointerException e) {
@@ -92,21 +203,21 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * @param paymentType type of payment(hourly, daily, monthly, yearly)
-     * get and store the value from ui to specified payment type
+     *                    get and store the value from ui to specified payment type
      */
-    private void getPaymentAmountFromUi(PaymentType paymentType) {
+    private void readUserInputByPaymentType(PaymentType paymentType) {
         switch (paymentType) {
             case HOURLY:
-                paymentAmount = Double.parseDouble(hourlyPayment.getText().toString());
+                paymentAmount = Double.parseDouble(removeDecimalSeparators(hourlyPayment.getText().toString()));
                 break;
             case DAILY:
-                paymentAmount = Double.parseDouble(dailyPayment.getText().toString());
+                paymentAmount = Double.parseDouble(removeDecimalSeparators(dailyPayment.getText().toString()));
                 break;
             case MONTHLY:
-                paymentAmount = Double.parseDouble(monthlyPayment.getText().toString());
+                paymentAmount = Double.parseDouble(removeDecimalSeparators(monthlyPayment.getText().toString()));
                 break;
             case YEARLY:
-                paymentAmount = Double.parseDouble(yearlyPayment.getText().toString());
+                paymentAmount = Double.parseDouble(removeDecimalSeparators(yearlyPayment.getText().toString()));
                 break;
             default:
                 break;
@@ -124,5 +235,24 @@ public class MainActivity extends AppCompatActivity {
         dailyPayment.clearFocus();
         monthlyPayment.clearFocus();
         yearlyPayment.clearFocus();
+    }
+
+    private String placeDecimalSeparators(String inputStringNumber) {
+        String reversedString = new StringBuilder(inputStringNumber).reverse().toString();
+        StringBuilder stringNumberWithDecimalPoints = new StringBuilder();
+        int counter = 1;
+        for (int i = 0; i < reversedString.length(); i++) {
+            stringNumberWithDecimalPoints.append(reversedString.charAt(i));
+            if (counter % 3 == 0 && i != reversedString.length() - 1)
+                stringNumberWithDecimalPoints.append(",");
+            if (reversedString.charAt(i) == '.') {
+            }
+            counter++;
+        }
+        return stringNumberWithDecimalPoints.reverse().toString();
+    }
+
+    private String removeDecimalSeparators(String inputStringNumberWithDecimalSeparators) {
+        return inputStringNumberWithDecimalSeparators.replaceAll(",", "");
     }
 }
